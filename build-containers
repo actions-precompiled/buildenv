@@ -8,7 +8,7 @@ fi
 VERSION="$(cat ./version.txt)"
 
 for dockerfile in Dockerfile.*; do
-    target="$CONTAINER_BASE/builder-${dockerfile#Dockerfile.}:$VERSION"
+    target="${CONTAINER_BASE}-builder-${dockerfile#Dockerfile.}:$VERSION"
     echo "dockerfile: $dockerfile target: $target"
 
     docker build . -f "$dockerfile" -t "$target"

@@ -65,7 +65,7 @@ jobs:
 
     - name: Build containers
       env:
-        CONTAINER_BASE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-
+        CONTAINER_BASE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         DONT_PUSH: 1
       run: |
         ./build-containers
@@ -102,7 +102,7 @@ jobs:
         password: ${{ github.token }}
 
     - name: Build and push containers
-      if: github.event_name != 'pull_request'
+      if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
       env:
         CONTAINER_BASE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-
       run: |
