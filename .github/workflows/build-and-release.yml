@@ -48,7 +48,6 @@ jobs:
           - linux-amd64
           - linux-aarch64
           - windows-amd64
-          - windows-aarch64
 
     steps:
       - name: Checkout code

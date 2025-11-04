@@ -33,17 +33,6 @@
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_TOOLCHAIN_FILE": "/toolchains/windows-amd64.cmake"
       }
-    },
-    {
-      "name": "windows-aarch64",
-      "displayName": "Windows ARM64",
-      "description": "Cross-compilation for Windows aarch64 (experimental)",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_TOOLCHAIN_FILE": "/toolchains/windows-aarch64.cmake"
-      }
     }
   ],
   "buildPresets": [
@@ -60,11 +49,6 @@
     {
       "name": "windows-amd64",
       "configurePreset": "windows-amd64",
-      "targets": ["package-zip"]
-    },
-    {
-      "name": "windows-aarch64",
-      "configurePreset": "windows-aarch64",
       "targets": ["package-zip"]
     }
   ]

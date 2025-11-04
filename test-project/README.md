@@ -38,13 +38,6 @@ docker run --rm \
   -v $(pwd)/build-output/windows-amd64:/out \
   -e BUILD_TARGET=windows-amd64 \
   cross-buildenv:latest
-
-# Windows ARM64
-docker run --rm \
-  -v $(pwd):/src \
-  -v $(pwd)/build-output/windows-aarch64:/out \
-  -e BUILD_TARGET=windows-aarch64 \
-  cross-buildenv:latest
 ```
 
 ### Usando CMake Presets (dentro do container)
@@ -65,7 +58,7 @@ cmake --build --preset linux-aarch64
 
 O GitHub Actions automaticamente:
 1. Builda o container Docker
-2. Compila para todas as plataformas (linux-amd64, linux-aarch64, windows-amd64, windows-aarch64)
+2. Compila para todas as plataformas (linux-amd64, linux-aarch64, windows-amd64)
 3. Testa os executáveis:
    - Linux AMD64: execução nativa
    - Linux ARM64: execução com QEMU
@@ -76,9 +69,11 @@ O GitHub Actions automaticamente:
 ## Artifacts Gerados
 
 Para cada plataforma, o build gera:
-- Executável compilado (`cross-test` ou `cross-test.exe`)
+- Executável compilado na pasta `bin/` (`cross-test` ou `cross-test.exe`)
 - Arquivo `BUILD_INFO.txt` com informações do build
 - Package ZIP: `cross-test-<platform>-<arch>-<version>.zip`
+
+Os binários são automaticamente colocados na pasta `bin/` dentro do diretório de build, facilitando o empacotamento e distribuição.
 
 ## Testando os Executáveis
 

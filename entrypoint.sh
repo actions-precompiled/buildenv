@@ -10,7 +10,7 @@ SOURCE_DIR="${SOURCE_DIR:-/src}"
 BUILD_DIR="${BUILD_DIR:-/out}"
 
 # Validate BUILD_TARGET
-VALID_TARGETS=("linux-amd64" "linux-aarch64" "windows-amd64" "windows-aarch64")
+VALID_TARGETS=("linux-amd64" "linux-aarch64" "windows-amd64")
 if [[ ! " ${VALID_TARGETS[@]} " =~ " ${BUILD_TARGET} " ]]; then
     echo "Error: Invalid BUILD_TARGET '${BUILD_TARGET}'"
     echo "Valid targets: ${VALID_TARGETS[@]}"

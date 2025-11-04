@@ -24,6 +24,11 @@ endif()
 set(TARGET_NAME "${PLATFORM_NAME}-${ARCH_NAME}")
 message(STATUS "Building for: ${TARGET_NAME}")
 
+# Set output directories - binaries go to bin/ folder
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
+
 # Main executable
 add_executable(cross-test src/main.cpp)
 

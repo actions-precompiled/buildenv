@@ -7,7 +7,6 @@ Docker container com todos os cross-compilers e toolchains do CMake para compila
 - **Linux AMD64** (x86_64) - compilação nativa
 - **Linux ARM64** (aarch64) - cross-compilation
 - **Windows AMD64** (x86_64) - cross-compilation com MinGW-w64
-- **Windows ARM64** (aarch64) - cross-compilation com MinGW-w64 (experimental)
 
 ## Build do Container
 
@@ -68,11 +67,6 @@ docker run --rm -v $(pwd):/src cross-buildenv ninja -C build-arm64
 docker run --rm -v $(pwd):/src cross-buildenv \
   cmake -B build-windows -G Ninja -DCMAKE_TOOLCHAIN_FILE=/toolchains/windows-amd64.cmake
 docker run --rm -v $(pwd):/src cross-buildenv ninja -C build-windows
-
-# Windows ARM64 (experimental)
-docker run --rm -v $(pwd):/src cross-buildenv \
-  cmake -B build-windows-arm64 -G Ninja -DCMAKE_TOOLCHAIN_FILE=/toolchains/windows-aarch64.cmake
-docker run --rm -v $(pwd):/src cross-buildenv ninja -C build-windows-arm64
 ```
 
 ### Exemplo com Script de Build
@@ -96,7 +90,6 @@ Use assim:
 ./build.sh linux-amd64
 ./build.sh linux-aarch64
 ./build.sh windows-amd64
-./build.sh windows-aarch64
 ```
 
 ### Exemplo Avançado
@@ -120,7 +113,6 @@ Todos os toolchains estão em `/toolchains/` dentro do container:
 - `/toolchains/linux-amd64.cmake` - Linux x86_64 nativo
 - `/toolchains/linux-aarch64.cmake` - Linux ARM64
 - `/toolchains/windows-amd64.cmake` - Windows x86_64 (MinGW)
-- `/toolchains/windows-aarch64.cmake` - Windows ARM64 (MinGW, experimental)
 
 ## Projeto de Teste
 
@@ -171,13 +163,13 @@ O projeto inclui um workflow do GitHub Actions (`.github/workflows/build-and-rel
 
 ## Variáveis de Ambiente
 
-- `BUILD_TARGET`: Define a plataforma alvo (linux-amd64, linux-aarch64, windows-amd64, windows-aarch64)
+- `BUILD_TARGET`: Define a plataforma alvo (linux-amd64, linux-aarch64, windows-amd64)
 - `SOURCE_DIR`: Diretório com o código fonte (padrão: `/src`)
 - `BUILD_DIR`: Diretório de saída do build (padrão: `/out`)
 
 ## Notas
 
-- O suporte para Windows ARM64 é experimental e pode não estar disponível em todas as versões do MinGW-w64
 - O container é baseado em Debian stable para maior estabilidade
 - Todos os diretórios `/src` e `/out` são pré-criados no container
 - O entrypoint automaticamente detecta e aplica o toolchain correto baseado em `BUILD_TARGET`
+- Os binários são gerados na pasta `bin/` dentro do diretório de build para facilitar o empacotamento
