@@ -1,0 +1,3 @@
+FROM prebuilt-base
+
+RUN apt install -y crossbuild-essential-arm64
