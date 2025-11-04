@@ -17,7 +17,7 @@ for dockerfile in Dockerfile.*; do
     target="$(container-name "${dockerfile#Dockerfile.}")"
     echo "dockerfile: $dockerfile target: $target"
 
-    docker build . -f "$dockerfile" -t "$target" --arg BASE_CONTAINER "$(container-name base)"
+    docker build . -f "$dockerfile" -t "$target" --build-arg BASE_CONTAINER="$(container-name base)"
     if [[ ! -v DONT_PUSH ]]; then
         docker push "$target"
     fi
