@@ -1,3 +1,0 @@
-FROM base-container
-COPY Toolchain-mingw.cmake /
-RUN apt install -y  g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64

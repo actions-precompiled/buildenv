@@ -1,3 +1,0 @@
-FROM base-container
-
-RUN apt install -y crossbuild-essential-arm64
