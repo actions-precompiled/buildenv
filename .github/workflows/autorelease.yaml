@@ -156,9 +156,11 @@ jobs:
 
     - name: Push cross-compilation container
       if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
-      env:
-        VERSION: ${{ env.RELEASE_VERSION }}
       run: |
+        # Read version from version.txt (set by make_release)
+        VERSION=$(cat version.txt)
+        echo "Pushing container version: ${VERSION}"
+
         # Tag with version and latest
         docker tag cross-buildenv:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
         docker tag cross-buildenv:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
