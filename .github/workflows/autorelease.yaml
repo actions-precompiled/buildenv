@@ -63,12 +63,58 @@ jobs:
           exit 1
         fi
 
-    - name: Build containers
-      env:
-        CONTAINER_BASE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        DONT_PUSH: 1
+    - name: Build cross-compilation artifacts
       run: |
-        ./build-containers
+        # Build the unified cross-compilation container
+        docker build -t cross-buildenv:latest .
+
+        # Build for Linux AMD64
+        echo "Building for linux-amd64..."
+        docker run --rm \
+          -v "$(pwd)/test-project:/src" \
+          -v "$(pwd)/build-output/linux-amd64:/out" \
+          -e BUILD_TARGET=linux-amd64 \
+          cross-buildenv:latest
+
+        # Build for Linux ARM64
+        echo "Building for linux-aarch64..."
+        docker run --rm \
+          -v "$(pwd)/test-project:/src" \
+          -v "$(pwd)/build-output/linux-aarch64:/out" \
+          -e BUILD_TARGET=linux-aarch64 \
+          cross-buildenv:latest
+
+        # Build for Windows AMD64
+        echo "Building for windows-amd64..."
+        docker run --rm \
+          -v "$(pwd)/test-project:/src" \
+          -v "$(pwd)/build-output/windows-amd64:/out" \
+          -e BUILD_TARGET=windows-amd64 \
+          cross-buildenv:latest
+
+        # List all artifacts
+        echo "All build artifacts:"
+        find build-output -name "*.zip" -ls
+
+    - name: Test cross-compilation artifacts
+      run: |
+        # Install runtime dependencies for testing
+        echo "Installing test dependencies..."
+        sudo dpkg --add-architecture i386
+        sudo apt-get update -qq
+        sudo apt-get install -y qemu-user-static libc6-arm64-cross libstdc++6-arm64-cross wine
+
+        # Test Linux AMD64 on host
+        echo "Testing linux-amd64..."
+        ./build-output/linux-amd64/bin/cross-test
+
+        # Test Linux ARM64 with QEMU on host
+        echo "Testing linux-aarch64 with QEMU..."
+        qemu-aarch64-static -L /usr/aarch64-linux-gnu ./build-output/linux-aarch64/bin/cross-test
+
+        # Test Windows executable with Wine on host
+        echo "Testing windows-amd64 with Wine..."
+        wine build-output/windows-amd64/bin/cross-test.exe
 
     - name: Make release if everything looks right
       if: github.event_name != 'pull_request'
@@ -92,6 +138,15 @@ jobs:
           --title "$TITLE" \
           --generate-notes
 
+    - name: Upload cross-compilation artifacts to release
+      if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ env.RELEASE_VERSION }}
+      run: |
+        # Upload all ZIP files
+        find build-output -name "*.zip" -exec gh release upload "$TAG" {} \;
+
     - name: Login to registry
       uses: docker/login-action@v3
       if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
@@ -100,10 +155,18 @@ jobs:
         username: ${{ env.USERNAME }}
         password: ${{ github.token }}
 
-    - name: Build and push containers
+    - name: Push cross-compilation container
       if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
-      env:
-        CONTAINER_BASE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-
       run: |
-        ./build-containers
+        # Read version from version.txt (set by make_release)
+        VERSION=$(cat version.txt)
+        echo "Pushing container version: ${VERSION}"
+
+        # Tag with version and latest
+        docker tag cross-buildenv:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
+        docker tag cross-buildenv:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+        # Push both tags
+        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
+        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
