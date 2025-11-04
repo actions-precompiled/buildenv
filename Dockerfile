@@ -20,8 +20,13 @@ RUN apt update && apt install -y \
 # Copy toolchain files
 COPY toolchains/*.cmake /toolchains/
 
+# Copy entrypoint script
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
 # Environment setup
 ENV PATH="/usr/local/bin:${PATH}"
+ENV SOURCE_DIR="/src"
+ENV BUILD_DIR="/out"
 
-# Default command
-CMD ["/bin/bash"]
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
