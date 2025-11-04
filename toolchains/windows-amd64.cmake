@@ -22,3 +22,6 @@ SET(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 # Make sure we can find DLLs and static libraries
 SET(CMAKE_PREFIX_PATH /usr/${TOOLCHAIN_PREFIX})
+
+# Static linking to avoid DLL dependencies
+SET(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static" CACHE STRING "Linker flags")
