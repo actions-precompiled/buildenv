@@ -90,8 +90,7 @@ jobs:
       run: |
         gh release create "$TAG" \
           --title "$TITLE" \
-          --generate-notes \
-          --notes-start-tag $(gh release list --limit 1 --json tagName -q .[].tagName) 
+          --generate-notes
 
     - name: Login to registry
       uses: docker/login-action@v3
