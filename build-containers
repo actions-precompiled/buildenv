@@ -7,11 +7,15 @@ fi
 
 VERSION="$(cat ./version.txt)"
 
+function container-name {
+    echo "${CONTAINER_BASE}-builder-$1:$VERSION"
+}
+
 for dockerfile in Dockerfile.*; do
-    target="${CONTAINER_BASE}-builder-${dockerfile#Dockerfile.}:$VERSION"
+    target="$(container-name "${dockerfile#Dockerfile.}")"
     echo "dockerfile: $dockerfile target: $target"
 
-    docker build . -f "$dockerfile" -t "$target"
+    docker build . -f "$dockerfile" -t "$target" --arg BASE_CONTAINER "$(container-name base)"
     if [[ ! -v DONT_PUSH ]]; then
         docker push "$target"
     fi

@@ -1,1 +1,1 @@
-FROM prebuilt-base
+FROM ${BASE_CONTAINER}
