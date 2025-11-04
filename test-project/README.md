@@ -58,12 +58,13 @@ cmake --build --preset linux-aarch64
 
 O workflow de autorelease (`.github/workflows/autorelease.yaml`) automaticamente:
 1. Builda o container Docker unificado
-2. Compila o projeto para todas as 3 plataformas como steps sequenciais:
-   - linux-amd64
-   - linux-aarch64
-   - windows-amd64
-3. Cria packages ZIP para cada plataforma
-4. Quando uma nova versão é gerada, cria release e faz upload dos 3 ZIPs automaticamente
+2. Compila o projeto para todas as 3 plataformas como steps sequenciais usando o container
+3. Testa cada binário compilado no host do GitHub Actions:
+   - Linux AMD64: execução nativa no host
+   - Linux ARM64: execução com QEMU no host
+   - Windows: verificação do formato no host
+4. Cria packages ZIP para cada plataforma
+5. Quando uma nova versão é gerada, cria release e faz upload dos 3 ZIPs automaticamente
 
 ## Artifacts Gerados
 

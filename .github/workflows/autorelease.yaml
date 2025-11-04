@@ -83,6 +83,10 @@ jobs:
           -e BUILD_TARGET=linux-amd64 \
           cross-buildenv:latest
 
+        # Test Linux AMD64 on host
+        echo "Testing linux-amd64 on host..."
+        ./build-output/linux-amd64/bin/cross-test
+
         # Build for Linux ARM64
         echo "Building for linux-aarch64..."
         docker run --rm \
@@ -91,6 +95,12 @@ jobs:
           -e BUILD_TARGET=linux-aarch64 \
           cross-buildenv:latest
 
+        # Test Linux ARM64 with QEMU on host
+        echo "Testing linux-aarch64 with QEMU on host..."
+        sudo apt-get update -qq
+        sudo apt-get install -y qemu-user-static
+        qemu-aarch64-static ./build-output/linux-aarch64/bin/cross-test
+
         # Build for Windows AMD64
         echo "Building for windows-amd64..."
         docker run --rm \
@@ -98,6 +108,10 @@ jobs:
           -v "$(pwd)/build-output/windows-amd64:/out" \
           -e BUILD_TARGET=windows-amd64 \
           cross-buildenv:latest
+
+        # Verify Windows executable on host
+        echo "Verifying windows-amd64 on host..."
+        file build-output/windows-amd64/bin/cross-test.exe
 
         # List all artifacts
         echo "All build artifacts:"
