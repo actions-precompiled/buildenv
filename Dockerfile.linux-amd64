@@ -1,1 +1,1 @@
-FROM ${BASE_CONTAINER}
+FROM base-container
