@@ -48,62 +48,20 @@ O entrypoint automaticamente:
 2. Compila o projeto
 3. Executa o target `package-zip`
 
-### Compilação Manual
+### Uso em Projetos
 
-Para cada plataforma, use o toolchain correspondente:
-
-```bash
-# Linux AMD64 (nativo)
-docker run --rm -v $(pwd):/src cross-buildenv \
-  cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=/toolchains/linux-amd64.cmake
-docker run --rm -v $(pwd):/src cross-buildenv ninja -C build
-
-# Linux ARM64
-docker run --rm -v $(pwd):/src cross-buildenv \
-  cmake -B build-arm64 -G Ninja -DCMAKE_TOOLCHAIN_FILE=/toolchains/linux-aarch64.cmake
-docker run --rm -v $(pwd):/src cross-buildenv ninja -C build-arm64
-
-# Windows AMD64
-docker run --rm -v $(pwd):/src cross-buildenv \
-  cmake -B build-windows -G Ninja -DCMAKE_TOOLCHAIN_FILE=/toolchains/windows-amd64.cmake
-docker run --rm -v $(pwd):/src cross-buildenv ninja -C build-windows
-```
-
-### Exemplo com Script de Build
-
-Crie um script `build.sh`:
+Para usar o container em seus projetos de CI/CD, você pode puxar a imagem do registro:
 
 ```bash
-#!/bin/bash
-PLATFORM=${1:-linux-amd64}
-BUILD_DIR="build-${PLATFORM}"
+# Pull da imagem
+docker pull ghcr.io/actions-precompiled/buildenv:latest
 
-docker run --rm -v $(pwd):/src cross-buildenv \
-  cmake -B ${BUILD_DIR} -G Ninja -DCMAKE_TOOLCHAIN_FILE=/toolchains/${PLATFORM}.cmake
-
-docker run --rm -v $(pwd):/src cross-buildenv ninja -C ${BUILD_DIR}
-```
-
-Use assim:
-
-```bash
-./build.sh linux-amd64
-./build.sh linux-aarch64
-./build.sh windows-amd64
-```
-
-### Exemplo Avançado
-
-```bash
-# Compilar com configurações customizadas
-docker run --rm -v $(pwd):/src -v $(pwd)/output:/out cross-buildenv bash -c "
-  cmake -B build -G Ninja \
-    -DCMAKE_TOOLCHAIN_FILE=/toolchains/linux-aarch64.cmake \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/out
-  ninja -C build
-  ninja -C build install
-"
+# Usar para compilar
+docker run --rm \
+  -v $(pwd):/src \
+  -v $(pwd)/output:/out \
+  -e BUILD_TARGET=linux-aarch64 \
+  ghcr.io/actions-precompiled/buildenv:latest
 ```
 
 ## Toolchains Disponíveis

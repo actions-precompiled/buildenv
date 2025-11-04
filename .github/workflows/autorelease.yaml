@@ -63,13 +63,6 @@ jobs:
           exit 1
         fi
 
-    - name: Build containers
-      env:
-        CONTAINER_BASE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        DONT_PUSH: 1
-      run: |
-        ./build-containers
-
     - name: Build cross-compilation artifacts
       run: |
         # Build the unified cross-compilation container
@@ -161,10 +154,16 @@ jobs:
         username: ${{ env.USERNAME }}
         password: ${{ github.token }}
 
-    - name: Build and push containers
+    - name: Push cross-compilation container
       if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
       env:
-        CONTAINER_BASE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-
+        VERSION: ${{ env.RELEASE_VERSION }}
       run: |
-        ./build-containers
+        # Tag with version and latest
+        docker tag cross-buildenv:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
+        docker tag cross-buildenv:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+        # Push both tags
+        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${VERSION}
+        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
