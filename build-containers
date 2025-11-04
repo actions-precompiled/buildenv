@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if [[ ! -v CONTAINER_BASE ]]; then
+    echo "missing CONTAINER_BASE" >&2
+    exit 1
+fi
+
+VERSION="$(cat ./version.txt)"
+
+for dockerfile in Dockerfile.*; do
+    target="$CONTAINER_BASE/builder-${dockerfile#Dockerfile.}:$VERSION"
+    echo "dockerfile: $dockerfile target: $target"
+
+    docker build . -f "$dockerfile" -t "$target"
+    if [[ ! -v DONT_PUSH ]]; then
+        docker push "$target"
+    fi
+done
