@@ -100,8 +100,9 @@ jobs:
       run: |
         # Install runtime dependencies for testing
         echo "Installing test dependencies..."
+        sudo dpkg --add-architecture i386
         sudo apt-get update -qq
-        sudo apt-get install -y qemu-user-static libc6-arm64-cross libstdc++6-arm64-cross file
+        sudo apt-get install -y qemu-user-static libc6-arm64-cross libstdc++6-arm64-cross wine wine32 wine64
 
         # Test Linux AMD64 on host
         echo "Testing linux-amd64..."
@@ -111,9 +112,9 @@ jobs:
         echo "Testing linux-aarch64 with QEMU..."
         qemu-aarch64-static -L /usr/aarch64-linux-gnu ./build-output/linux-aarch64/bin/cross-test
 
-        # Verify Windows executable on host
-        echo "Verifying windows-amd64..."
-        file build-output/windows-amd64/bin/cross-test.exe
+        # Test Windows executable with Wine on host
+        echo "Testing windows-amd64 with Wine..."
+        wine64 build-output/windows-amd64/bin/cross-test.exe
 
     - name: Make release if everything looks right
       if: github.event_name != 'pull_request'

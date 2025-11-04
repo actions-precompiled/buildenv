@@ -115,7 +115,7 @@ The project includes an autorelease workflow (`.github/workflows/autorelease.yam
 3. Tests the compiled binaries on the GitHub Actions host:
    - Linux AMD64: native execution
    - Linux ARM64: execution with QEMU
-   - Windows: format verification
+   - Windows: execution with Wine
 4. Creates ZIP packages for each platform
 5. Creates automatic release and uploads ZIPs when a new version is generated
 

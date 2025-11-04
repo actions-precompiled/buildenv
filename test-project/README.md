@@ -62,7 +62,7 @@ The autorelease workflow (`.github/workflows/autorelease.yaml`) automatically:
 3. Tests each compiled binary on the GitHub Actions host:
    - Linux AMD64: native execution on host
    - Linux ARM64: execution with QEMU on host
-   - Windows: format verification on host
+   - Windows: execution with Wine on host
 4. Creates ZIP packages for each platform
 5. When a new version is generated, creates a release and uploads the 3 ZIPs automatically
 
