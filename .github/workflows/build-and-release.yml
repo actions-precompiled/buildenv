@@ -75,12 +75,14 @@ jobs:
           echo "Build artifacts for ${{ matrix.target }}:"
           ls -lah build-output/${{ matrix.target }}/
 
-      - name: Test executable (Linux only)
+      - name: Test executable (Linux AMD64)
         if: startsWith(matrix.target, 'linux-amd64')
         run: |
           echo "Testing executable for ${{ matrix.target }}..."
-          chmod +x build-output/${{ matrix.target }}/bin/cross-test
-          build-output/${{ matrix.target }}/bin/cross-test
+          docker run --rm \
+            -v "$(pwd)/build-output/${{ matrix.target }}:/test" \
+            cross-buildenv:latest \
+            /test/bin/cross-test
 
       - name: Test executable (Linux ARM64 with QEMU)
         if: startsWith(matrix.target, 'linux-aarch64')
@@ -88,7 +90,10 @@ jobs:
           echo "Testing executable for ${{ matrix.target }} with QEMU..."
           sudo apt-get update
           sudo apt-get install -y qemu-user-static
-          qemu-aarch64-static build-output/${{ matrix.target }}/bin/cross-test
+          # Copy to avoid permission issues
+          cp build-output/${{ matrix.target }}/bin/cross-test /tmp/cross-test-arm64
+          chmod +x /tmp/cross-test-arm64
+          qemu-aarch64-static /tmp/cross-test-arm64
 
       - name: Verify Windows executable
         if: startsWith(matrix.target, 'windows-')
