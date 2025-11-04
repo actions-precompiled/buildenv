@@ -151,15 +151,15 @@ docker run --rm \
 
 ### CI/CD
 
-O projeto inclui um workflow do GitHub Actions (`.github/workflows/build-and-release.yml`) que:
-1. Builda o container Docker
-2. Compila para todas as plataformas
+O projeto inclui um workflow de autorelease (`.github/workflows/autorelease.yaml`) que:
+1. Builda o container Docker unificado
+2. Compila o projeto de teste para todas as plataformas (linux-amd64, linux-aarch64, windows-amd64)
 3. Testa os executáveis:
-   - Linux AMD64: execução nativa
+   - Linux AMD64: execução nativa dentro do container
    - Linux ARM64: execução com QEMU
    - Windows: verificação de formato
-4. Cria packages ZIP
-5. Faz release automático quando uma tag é criada
+4. Cria packages ZIP para cada plataforma
+5. Cria release automático e faz upload dos ZIPs quando uma nova versão é gerada
 
 ## Variáveis de Ambiente
 

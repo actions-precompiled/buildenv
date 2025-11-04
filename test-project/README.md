@@ -56,15 +56,18 @@ cmake --build --preset linux-aarch64
 
 ## Build com CI/CD
 
-O GitHub Actions automaticamente:
-1. Builda o container Docker
-2. Compila para todas as plataformas (linux-amd64, linux-aarch64, windows-amd64)
-3. Testa os executáveis:
-   - Linux AMD64: execução nativa
+O workflow de autorelease (`.github/workflows/autorelease.yaml`) automaticamente:
+1. Builda o container Docker unificado
+2. Compila o projeto para todas as 3 plataformas como steps sequenciais:
+   - linux-amd64
+   - linux-aarch64
+   - windows-amd64
+3. Testa cada executável após a compilação:
+   - Linux AMD64: execução nativa dentro do container
    - Linux ARM64: execução com QEMU
-   - Windows: verificação do executável
+   - Windows: verificação do formato do executável
 4. Cria packages ZIP para cada plataforma
-5. Faz release automático quando uma tag é criada
+5. Quando uma nova versão é gerada, cria release e faz upload dos 3 ZIPs automaticamente
 
 ## Artifacts Gerados
 
