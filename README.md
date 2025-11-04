@@ -1,24 +1,24 @@
 # Cross-Compilation Build Environment
 
-Docker container com todos os cross-compilers e toolchains do CMake para compilar projetos C/C++ para múltiplas plataformas.
+Docker container with all cross-compilers and CMake toolchains to compile C/C++ projects for multiple platforms.
 
-## Plataformas Suportadas
+## Supported Platforms
 
-- **Linux AMD64** (x86_64) - compilação nativa
+- **Linux AMD64** (x86_64) - native compilation
 - **Linux ARM64** (aarch64) - cross-compilation
-- **Windows AMD64** (x86_64) - cross-compilation com MinGW-w64
+- **Windows AMD64** (x86_64) - cross-compilation with MinGW-w64
 
-## Build do Container
+## Build Container
 
 ```bash
 docker build -t cross-buildenv .
 ```
 
-## Uso
+## Usage
 
-### Modo Automático (com Entrypoint)
+### Automatic Mode (with Entrypoint)
 
-O container possui um entrypoint que configura automaticamente o toolchain baseado na variável de ambiente `BUILD_TARGET`:
+The container has an entrypoint that automatically configures the toolchain based on the `BUILD_TARGET` environment variable:
 
 ```bash
 # Linux AMD64
@@ -43,20 +43,20 @@ docker run --rm \
   cross-buildenv
 ```
 
-O entrypoint automaticamente:
-1. Configura o CMake com o toolchain correto
-2. Compila o projeto
-3. Executa o target `package-zip`
+The entrypoint automatically:
+1. Configures CMake with the correct toolchain
+2. Compiles the project
+3. Executes the `package-zip` target
 
-### Uso em Projetos
+### Usage in Projects
 
-Para usar o container em seus projetos de CI/CD, você pode puxar a imagem do registro:
+To use the container in your CI/CD projects, you can pull the image from the registry:
 
 ```bash
-# Pull da imagem
+# Pull image
 docker pull ghcr.io/actions-precompiled/buildenv:latest
 
-# Usar para compilar
+# Use to compile
 docker run --rm \
   -v $(pwd):/src \
   -v $(pwd)/output:/out \
@@ -64,25 +64,25 @@ docker run --rm \
   ghcr.io/actions-precompiled/buildenv:latest
 ```
 
-## Toolchains Disponíveis
+## Available Toolchains
 
-Todos os toolchains estão em `/toolchains/` dentro do container:
+All toolchains are in `/toolchains/` inside the container:
 
-- `/toolchains/linux-amd64.cmake` - Linux x86_64 nativo
+- `/toolchains/linux-amd64.cmake` - Native Linux x86_64
 - `/toolchains/linux-aarch64.cmake` - Linux ARM64
 - `/toolchains/windows-amd64.cmake` - Windows x86_64 (MinGW)
 
-## Projeto de Teste
+## Test Project
 
-O repositório inclui um projeto de teste completo em `test-project/` que demonstra o uso do container.
+The repository includes a complete test project in `test-project/` that demonstrates the container usage.
 
-### Build do Projeto de Teste
+### Build Test Project
 
 ```bash
-# Build do container
+# Build container
 docker build -t cross-buildenv .
 
-# Build para todas as plataformas
+# Build for all platforms
 cd test-project
 
 # Linux AMD64
@@ -109,25 +109,25 @@ docker run --rm \
 
 ### CI/CD
 
-O projeto inclui um workflow de autorelease (`.github/workflows/autorelease.yaml`) que:
-1. Builda o container Docker unificado
-2. Compila o projeto de teste para todas as plataformas (linux-amd64, linux-aarch64, windows-amd64) usando o container
-3. Testa os binários compilados no host do GitHub Actions:
-   - Linux AMD64: execução nativa
-   - Linux ARM64: execução com QEMU
-   - Windows: verificação do formato
-4. Cria packages ZIP para cada plataforma
-5. Cria release automático e faz upload dos ZIPs quando uma nova versão é gerada
+The project includes an autorelease workflow (`.github/workflows/autorelease.yaml`) that:
+1. Builds the unified Docker container
+2. Compiles the test project for all platforms (linux-amd64, linux-aarch64, windows-amd64) using the container
+3. Tests the compiled binaries on the GitHub Actions host:
+   - Linux AMD64: native execution
+   - Linux ARM64: execution with QEMU
+   - Windows: format verification
+4. Creates ZIP packages for each platform
+5. Creates automatic release and uploads ZIPs when a new version is generated
 
-## Variáveis de Ambiente
+## Environment Variables
 
-- `BUILD_TARGET`: Define a plataforma alvo (linux-amd64, linux-aarch64, windows-amd64)
-- `SOURCE_DIR`: Diretório com o código fonte (padrão: `/src`)
-- `BUILD_DIR`: Diretório de saída do build (padrão: `/out`)
+- `BUILD_TARGET`: Defines the target platform (linux-amd64, linux-aarch64, windows-amd64)
+- `SOURCE_DIR`: Directory with source code (default: `/src`)
+- `BUILD_DIR`: Build output directory (default: `/out`)
 
-## Notas
+## Notes
 
-- O container é baseado em Debian stable para maior estabilidade
-- Todos os diretórios `/src` e `/out` são pré-criados no container
-- O entrypoint automaticamente detecta e aplica o toolchain correto baseado em `BUILD_TARGET`
-- Os binários são gerados na pasta `bin/` dentro do diretório de build para facilitar o empacotamento
+- The container is based on Debian stable for greater stability
+- All `/src` and `/out` directories are pre-created in the container
+- The entrypoint automatically detects and applies the correct toolchain based on `BUILD_TARGET`
+- Binaries are generated in the `bin/` folder inside the build directory to facilitate packaging
