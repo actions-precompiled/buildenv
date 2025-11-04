@@ -62,12 +62,8 @@ O workflow de autorelease (`.github/workflows/autorelease.yaml`) automaticamente
    - linux-amd64
    - linux-aarch64
    - windows-amd64
-3. Testa cada executável após a compilação:
-   - Linux AMD64: execução nativa dentro do container
-   - Linux ARM64: execução com QEMU
-   - Windows: verificação do formato do executável
-4. Cria packages ZIP para cada plataforma
-5. Quando uma nova versão é gerada, cria release e faz upload dos 3 ZIPs automaticamente
+3. Cria packages ZIP para cada plataforma
+4. Quando uma nova versão é gerada, cria release e faz upload dos 3 ZIPs automaticamente
 
 ## Artifacts Gerados
 

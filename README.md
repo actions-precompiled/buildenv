@@ -154,12 +154,8 @@ docker run --rm \
 O projeto inclui um workflow de autorelease (`.github/workflows/autorelease.yaml`) que:
 1. Builda o container Docker unificado
 2. Compila o projeto de teste para todas as plataformas (linux-amd64, linux-aarch64, windows-amd64)
-3. Testa os executáveis:
-   - Linux AMD64: execução nativa dentro do container
-   - Linux ARM64: execução com QEMU
-   - Windows: verificação de formato
-4. Cria packages ZIP para cada plataforma
-5. Cria release automático e faz upload dos ZIPs quando uma nova versão é gerada
+3. Cria packages ZIP para cada plataforma
+4. Cria release automático e faz upload dos ZIPs quando uma nova versão é gerada
 
 ## Variáveis de Ambiente
 
