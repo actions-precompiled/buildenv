@@ -9,6 +9,12 @@ RUN apt update && apt install -y \
     build-essential \
     cmake \
     ninja-build \
+    autoconf \
+    automake \
+    gettext \
+    libtool \
+    m4 \
+    texinfo \
     git \
     curl \
     wget \
