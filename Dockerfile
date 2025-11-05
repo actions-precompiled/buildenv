@@ -10,6 +10,8 @@ RUN apt update && apt install -y \
     cmake \
     ninja-build \
     git \
+    curl \
+    wget \
     crossbuild-essential-arm64 \
     g++-mingw-w64-x86-64 \
     gcc-mingw-w64-x86-64 \
