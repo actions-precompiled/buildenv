@@ -136,8 +136,7 @@ The project includes an autorelease workflow (`.github/workflows/autorelease.yam
 - `BUILD_DIR`: Build output directory (default: `/out`)
 - `CCACHE_DIR`: Directory for ccache cache (default: `/ccache`)
 - `CCACHE_MAXSIZE`: Maximum cache size (default: `5G`)
-- `CCACHE_COMPRESS`: Enable compression (default: `1`)
-- `CCACHE_COMPRESSLEVEL`: Compression level 1-9 (default: `6`)
+- `CCACHE_COMPRESS`: Enable compression (default: `0` - disabled)
 
 ## ccache Support
 
@@ -168,7 +167,6 @@ The build process automatically displays ccache statistics before and after each
 - Cache hit rate
 - Number of cached files
 - Cache size
-- Compression ratio
 
 ### ccache Configuration
 
@@ -181,7 +179,6 @@ docker run --rm \
   -v ~/.cache/buildenv-ccache:/ccache \
   -e BUILD_TARGET=linux-amd64 \
   -e CCACHE_MAXSIZE=10G \
-  -e CCACHE_COMPRESSLEVEL=9 \
   cross-buildenv
 ```
 

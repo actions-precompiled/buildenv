@@ -13,8 +13,7 @@ CCACHE_DIR="${CCACHE_DIR:-/ccache}"
 # Configure ccache
 export CCACHE_DIR
 export CCACHE_MAXSIZE="${CCACHE_MAXSIZE:-5G}"
-export CCACHE_COMPRESS="${CCACHE_COMPRESS:-1}"
-export CCACHE_COMPRESSLEVEL="${CCACHE_COMPRESSLEVEL:-6}"
+export CCACHE_COMPRESS="${CCACHE_COMPRESS:-0}"
 
 # Validate BUILD_TARGET
 VALID_TARGETS=("linux-amd64" "linux-aarch64" "windows-amd64")
