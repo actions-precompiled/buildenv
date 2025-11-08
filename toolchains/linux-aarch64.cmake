@@ -7,6 +7,13 @@ SET(CMAKE_SYSTEM_PROCESSOR aarch64)
 SET(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
 SET(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)
 
+# Use ccache for faster rebuilds
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+    SET(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+    SET(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+endif()
+
 # Where is the target environment
 SET(CMAKE_FIND_ROOT_PATH /usr/aarch64-linux-gnu)
 

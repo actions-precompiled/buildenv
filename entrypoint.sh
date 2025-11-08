@@ -8,6 +8,10 @@ set -e
 BUILD_TARGET="${BUILD_TARGET:-linux-amd64}"
 SOURCE_DIR="${SOURCE_DIR:-/src}"
 BUILD_DIR="${BUILD_DIR:-/out}"
+CCACHE_DIR="${CCACHE_DIR:-/ccache}"
+
+# Configure ccache
+export CCACHE_DIR
 
 # Validate BUILD_TARGET
 VALID_TARGETS=("linux-amd64" "linux-aarch64" "windows-amd64")
@@ -27,6 +31,10 @@ echo "BUILD_TARGET: ${BUILD_TARGET}"
 echo "SOURCE_DIR: ${SOURCE_DIR}"
 echo "BUILD_DIR: ${BUILD_DIR}"
 echo "TOOLCHAIN_FILE: ${TOOLCHAIN_FILE}"
+echo "CCACHE_DIR: ${CCACHE_DIR}"
+echo "========================================="
+echo "ccache stats (before build):"
+ccache -s
 echo "========================================="
 
 # Check if source directory exists
@@ -62,6 +70,9 @@ if [ $# -eq 0 ]; then
     echo "========================================="
     echo "Build completed successfully!"
     echo "Output directory: ${BUILD_DIR}"
+    echo "========================================="
+    echo "ccache stats (after build):"
+    ccache -s
     echo "========================================="
 
 else

@@ -25,6 +25,7 @@ The container has an entrypoint that automatically configures the toolchain base
 docker run --rm \
   -v $(pwd):/src \
   -v $(pwd)/output/linux-amd64:/out \
+  -v ~/.cache/buildenv-ccache:/ccache \
   -e BUILD_TARGET=linux-amd64 \
   cross-buildenv
 
@@ -32,6 +33,7 @@ docker run --rm \
 docker run --rm \
   -v $(pwd):/src \
   -v $(pwd)/output/linux-aarch64:/out \
+  -v ~/.cache/buildenv-ccache:/ccache \
   -e BUILD_TARGET=linux-aarch64 \
   cross-buildenv
 
@@ -39,6 +41,7 @@ docker run --rm \
 docker run --rm \
   -v $(pwd):/src \
   -v $(pwd)/output/windows-amd64:/out \
+  -v ~/.cache/buildenv-ccache:/ccache \
   -e BUILD_TARGET=windows-amd64 \
   cross-buildenv
 ```
@@ -56,10 +59,11 @@ To use the container in your CI/CD projects, you can pull the image from the reg
 # Pull image
 docker pull ghcr.io/actions-precompiled/buildenv:latest
 
-# Use to compile
+# Use to compile (with ccache for faster rebuilds)
 docker run --rm \
   -v $(pwd):/src \
   -v $(pwd)/output:/out \
+  -v ~/.cache/buildenv-ccache:/ccache \
   -e BUILD_TARGET=linux-aarch64 \
   ghcr.io/actions-precompiled/buildenv:latest
 ```
@@ -82,6 +86,9 @@ The repository includes a complete test project in `test-project/` that demonstr
 # Build container
 docker build -t cross-buildenv .
 
+# Create ccache directory
+mkdir -p ~/.cache/buildenv-ccache
+
 # Build for all platforms
 cd test-project
 
@@ -89,6 +96,7 @@ cd test-project
 docker run --rm \
   -v $(pwd):/src \
   -v $(pwd)/build-output/linux-amd64:/out \
+  -v ~/.cache/buildenv-ccache:/ccache \
   -e BUILD_TARGET=linux-amd64 \
   cross-buildenv
 
@@ -96,6 +104,7 @@ docker run --rm \
 docker run --rm \
   -v $(pwd):/src \
   -v $(pwd)/build-output/linux-aarch64:/out \
+  -v ~/.cache/buildenv-ccache:/ccache \
   -e BUILD_TARGET=linux-aarch64 \
   cross-buildenv
 
@@ -103,6 +112,7 @@ docker run --rm \
 docker run --rm \
   -v $(pwd):/src \
   -v $(pwd)/build-output/windows-amd64:/out \
+  -v ~/.cache/buildenv-ccache:/ccache \
   -e BUILD_TARGET=windows-amd64 \
   cross-buildenv
 ```
@@ -124,10 +134,59 @@ The project includes an autorelease workflow (`.github/workflows/autorelease.yam
 - `BUILD_TARGET`: Defines the target platform (linux-amd64, linux-aarch64, windows-amd64)
 - `SOURCE_DIR`: Directory with source code (default: `/src`)
 - `BUILD_DIR`: Build output directory (default: `/out`)
+- `CCACHE_DIR`: Directory for ccache cache (default: `/ccache`)
+- `CCACHE_MAXSIZE`: Maximum cache size (configurable, uses ccache defaults if not set)
+- `CCACHE_COMPRESS`: Enable compression (configurable, uses ccache defaults if not set)
+
+## ccache Support
+
+The build environment includes **ccache** for faster rebuilds. ccache is a compiler cache that speeds up recompilation by caching previous compilations and detecting when the same compilation is being done again.
+
+### ccache Volume Mount
+
+To persist the ccache cache between builds, mount a volume to `/ccache`:
+
+```bash
+# Create a directory for ccache on your host
+mkdir -p ~/.cache/buildenv-ccache
+
+# Use it in your builds
+docker run --rm \
+  -v $(pwd):/src \
+  -v $(pwd)/output/linux-amd64:/out \
+  -v ~/.cache/buildenv-ccache:/ccache \
+  -e BUILD_TARGET=linux-amd64 \
+  cross-buildenv
+```
+
+**Important:** Mount the ccache volume to `/ccache` in the container.
+
+### ccache Statistics
+
+The build process automatically displays ccache statistics before and after each build, showing:
+- Cache hit rate
+- Number of cached files
+- Cache size
+
+### ccache Configuration
+
+You can customize ccache behavior with environment variables:
+
+```bash
+docker run --rm \
+  -v $(pwd):/src \
+  -v $(pwd)/output:/out \
+  -v ~/.cache/buildenv-ccache:/ccache \
+  -e BUILD_TARGET=linux-amd64 \
+  -e CCACHE_MAXSIZE=10G \
+  cross-buildenv
+```
 
 ## Notes
 
 - The container is based on Debian stable for greater stability
-- All `/src` and `/out` directories are pre-created in the container
+- All `/src`, `/out`, and `/ccache` directories are pre-created in the container
 - The entrypoint automatically detects and applies the correct toolchain based on `BUILD_TARGET`
 - Binaries are generated in the `bin/` folder inside the build directory to facilitate packaging
+- ccache is enabled by default in all toolchains for faster rebuilds
+- Mount a volume to `/ccache` to persist the compilation cache between builds

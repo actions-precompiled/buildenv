@@ -1,7 +1,7 @@
 FROM debian:stable
 
 # Create working directories
-RUN mkdir -p /src /out /toolchains
+RUN mkdir -p /src /out /toolchains /ccache
 WORKDIR /src
 
 # Update package list and install base build tools
@@ -18,6 +18,7 @@ RUN apt update && apt install -y \
     git \
     curl \
     wget \
+    ccache \
     crossbuild-essential-arm64 \
     g++-mingw-w64-x86-64 \
     gcc-mingw-w64-x86-64 \
@@ -35,6 +36,7 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 ENV PATH="/usr/local/bin:${PATH}"
 ENV SOURCE_DIR="/src"
 ENV BUILD_DIR="/out"
+ENV CCACHE_DIR="/ccache"
 
 # Set entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
