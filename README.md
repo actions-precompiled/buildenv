@@ -135,8 +135,8 @@ The project includes an autorelease workflow (`.github/workflows/autorelease.yam
 - `SOURCE_DIR`: Directory with source code (default: `/src`)
 - `BUILD_DIR`: Build output directory (default: `/out`)
 - `CCACHE_DIR`: Directory for ccache cache (default: `/ccache`)
-- `CCACHE_MAXSIZE`: Maximum cache size (default: `5G`)
-- `CCACHE_COMPRESS`: Enable compression (default: `0` - disabled)
+- `CCACHE_MAXSIZE`: Maximum cache size (configurable, uses ccache defaults if not set)
+- `CCACHE_COMPRESS`: Enable compression (configurable, uses ccache defaults if not set)
 
 ## ccache Support
 
