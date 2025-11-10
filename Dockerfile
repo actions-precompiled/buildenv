@@ -22,6 +22,7 @@ RUN apt update && apt install -y \
     mingw-w64 \
     mingw-w64-tools \
     mingw-w64-x86-64-dev \
+    nasm \
     ninja-build \
     pkg-config \
     texinfo \

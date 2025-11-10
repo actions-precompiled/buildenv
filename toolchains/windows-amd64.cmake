@@ -16,19 +16,16 @@ if(CCACHE_PROGRAM)
     SET(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
 endif()
 
-# Where is the target environment
-SET(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
+set(CMAKE_FIND_ROOT_PATH "${CMAKE_SYSROOT}" "/usr/${TOOLCHAIN_PREFIX}")
 
-# Search for programs in the build host directories
-SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-# For libraries and headers in the target directories
-SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-SET(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+# para pacotes cmake/pkg-config no staging
+set(CMAKE_PREFIX_PATH "${CMAKE_SYSROOT}")
+set(PKG_CONFIG_PATH "${CMAKE_SYSROOT}/lib/pkgconfig")
 
-# Make sure we can find DLLs and static libraries
-SET(CMAKE_PREFIX_PATH /usr/${TOOLCHAIN_PREFIX})
-
-# Static linking to avoid DLL dependencies
-SET(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static" CACHE STRING "Linker flags")
+# linkagem estática
+set(CMAKE_EXE_LINKER_FLAGS "-static -static-libgcc -static-libstdc++" CACHE STRING "")

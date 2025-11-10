@@ -4,8 +4,6 @@
 SET(CMAKE_SYSTEM_NAME Windows)
 SET(CMAKE_SYSTEM_PROCESSOR aarch64)
 
-# Specify the cross compiler
-# Note: These may need to be adjusted based on your MinGW-w64 ARM64 installation
 SET(TOOLCHAIN_PREFIX aarch64-w64-mingw32)
 SET(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
 SET(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++)
@@ -18,13 +16,9 @@ if(CCACHE_PROGRAM)
     SET(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
 endif()
 
-# Where is the target environment
-SET(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
+set(CMAKE_FIND_ROOT_PATH "${CMAKE_SYSROOT}" "/usr/${TOOLCHAIN_PREFIX}")
 
-# Search for programs in the build host directories
 SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-
-# For libraries and headers in the target directories
 SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 SET(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
