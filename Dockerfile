@@ -6,25 +6,26 @@ WORKDIR /src
 
 # Update package list and install base build tools
 RUN apt update && apt install -y \
-    build-essential \
-    cmake \
-    ninja-build \
     autoconf \
     automake \
-    gettext \
-    libtool \
-    m4 \
-    pkg-config \
-    texinfo \
-    git \
-    curl \
-    wget \
+    build-essential \
     ccache \
+    cmake \
     crossbuild-essential-arm64 \
+    curl \
     g++-mingw-w64-x86-64 \
     gcc-mingw-w64-x86-64 \
-    g++-mingw-w64-i686 \
-    gcc-mingw-w64-i686 \
+    gettext \
+    git \
+    libtool \
+    m4 \
+    mingw-w64 \
+    mingw-w64-tools \
+    mingw-w64-x86-64-dev \
+    ninja-build \
+    pkg-config \
+    texinfo \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy toolchain files
