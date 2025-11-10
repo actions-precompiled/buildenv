@@ -14,6 +14,7 @@ RUN apt update && apt install -y \
     gettext \
     libtool \
     m4 \
+    pkg-config \
     texinfo \
     git \
     curl \
