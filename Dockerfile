@@ -25,8 +25,11 @@ RUN apt update && apt install -y \
     nasm \
     ninja-build \
     pkg-config \
+    tar \
     texinfo \
+    unzip \
     wget \
+    zip \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy toolchain files
