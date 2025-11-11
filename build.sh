@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DEBIAN_VERSION=bookworm
+set -exuo pipefail
 
 apt update
 
@@ -10,11 +10,12 @@ apt install -y \
   gpg
 
 # powershell repo
-wget -q https://packages.microsoft.com/config/debian/$DEBIAN_VERSION/packages-microsoft-prod.deb
+wget -q "https://packages.microsoft.com/config/debian/$(grep -oE '[0-9]+' /etc/debian_version | head -1)/packages-microsoft-prod.deb"
 dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
 
 
+apt update
 apt install -y \
   autoconf \
   automake \
@@ -34,7 +35,7 @@ apt install -y \
   nasm \
   ninja-build \
   pkg-config \
-  powershell \
+  powershell-lts \
   tar \
   texinfo \
   unzip \

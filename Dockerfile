@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM debian:12
 
 # Create working directories
 RUN mkdir -p /src /out /toolchains /ccache
