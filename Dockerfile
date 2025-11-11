@@ -4,44 +4,9 @@ FROM debian:stable
 RUN mkdir -p /src /out /toolchains /ccache
 WORKDIR /src
 
-# Update package list and install base build tools
-RUN curl -s https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg && \
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/debian/12 stable main" > /etc/apt/sources.list.d/microsoft-prod.list && \
-    apt update && apt install -y \
-    autoconf \
-    automake \
-    build-essential \
-    ccache \
-    cmake \
-    crossbuild-essential-arm64 \
-    curl \
-    g++-mingw-w64-x86-64 \
-    gcc-mingw-w64-x86-64 \
-    gettext \
-    git \
-    libtool \
-    m4 \
-    mingw-w64 \
-    mingw-w64-tools \
-    mingw-w64-x86-64-dev \
-    nasm \
-    ninja-build \
-    pkg-config \
-    powershell \
-    tar \
-    texinfo \
-    unzip \
-    wget \
-    zip \
-    && rm -rf /var/lib/apt/lists/*
+COPY build.sh .
 
-RUN \
-    wget -q https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb && \
-    apt-get update && \
-    apt-get install -y powershell && \
-    pwsh --version && \
-    rm packages-microsoft-prod.deb
+RUN ./build.sh
 
 # Copy toolchain files
 COPY toolchains/*.cmake /toolchains/
