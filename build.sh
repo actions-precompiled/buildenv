@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 
+DEBIAN_VERSION=bookworm
+
 apt update
 
 apt install -y \
+  wget \
   curl \
   gpg
 
 # powershell repo
-curl -s https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg
-echo "deb [arch=amd64] https://packages.microsoft.com/repos/debian/12 stable main" > /etc/apt/sources.list.d/microsoft-prod.list
+wget -q https://packages.microsoft.com/config/debian/$DEBIAN_VERSION/packages-microsoft-prod.deb
+dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
 
 
 apt install -y \
@@ -34,8 +38,9 @@ apt install -y \
   tar \
   texinfo \
   unzip \
-  wget \
   zip
+
+pwsh --version
 
 rm -rf /var/lib/apt/lists/*
 
