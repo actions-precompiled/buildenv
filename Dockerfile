@@ -32,12 +32,12 @@ RUN apt update && apt install -y \
     zip \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y wget apt-transport-https software-properties-common && \
+RUN \
     wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb && \
     dpkg -i packages-microsoft-prod.deb && \
     apt-get update && \
     apt-get install -y powershell && \
-    pwsh --version \
+    pwsh --version && \
     rm packages-microsoft-prod.deb
 
 # Copy toolchain files
