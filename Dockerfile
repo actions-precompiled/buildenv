@@ -5,7 +5,9 @@ RUN mkdir -p /src /out /toolchains /ccache
 WORKDIR /src
 
 # Update package list and install base build tools
-RUN apt update && apt install -y \
+RUN curl -s https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg && \
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/debian/12 stable main" > /etc/apt/sources.list.d/microsoft-prod.list && \
+    apt update && apt install -y \
     autoconf \
     automake \
     build-essential \
@@ -25,6 +27,7 @@ RUN apt update && apt install -y \
     nasm \
     ninja-build \
     pkg-config \
+    powershell \
     tar \
     texinfo \
     unzip \
