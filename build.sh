@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
+apt update
+
+apt install -y \
+  curl \
+  gpg
+
 # powershell repo
 curl -s https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg
 echo "deb [arch=amd64] https://packages.microsoft.com/repos/debian/12 stable main" > /etc/apt/sources.list.d/microsoft-prod.list
 
-apt update
 
 apt install -y \
   autoconf \
@@ -13,7 +18,6 @@ apt install -y \
   ccache \
   cmake \
   crossbuild-essential-arm64 \
-  curl \
   g++-mingw-w64-x86-64 \
   gcc-mingw-w64-x86-64 \
   gettext \
